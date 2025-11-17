@@ -27,15 +27,15 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project directory structure per plan.md (src/, tests/, data/, docs/, benchmark-results/)
-- [ ] T002 Initialize Python project with pyproject.toml including dependencies (duckdb>=0.9.0, pyarrow>=14.0.0, pandas>=2.1.0, faker>=22.0.0, pytest>=7.4.0, pytest-benchmark>=4.0.0, pytest-xdist>=3.5.0, black>=23.0.0, ruff>=0.1.0)
-- [ ] T003 [P] Create .python-version file specifying Python 3.11+
-- [ ] T004 [P] Create pytest.ini with benchmark configuration (disable_gc=true, min_rounds=5)
-- [ ] T005 [P] Create .gitignore to exclude data/, __pycache__, *.pyc, .pytest_cache, .duckdb
-- [ ] T006 [P] Configure ruff linting rules in pyproject.toml
-- [ ] T007 [P] Configure black formatting in pyproject.toml
-- [ ] T008 [P] Create README.md with project overview and quickstart reference
-- [ ] T009 [P] Create benchmark-results/README.md documenting benchmark tracking approach
+- [X] T001 Create project directory structure per plan.md (src/, tests/, data/, docs/, benchmark-results/)
+- [X] T002 Initialize Python project with pyproject.toml including dependencies (duckdb>=0.9.0, pyarrow>=14.0.0, pandas>=2.1.0, faker>=22.0.0, pytest>=7.4.0, pytest-benchmark>=4.0.0, pytest-xdist>=3.5.0, black>=23.0.0, ruff>=0.1.0)
+- [X] T003 [P] Create .python-version file specifying Python 3.11+
+- [X] T004 [P] Create pytest.ini with benchmark configuration (disable_gc=true, min_rounds=5)
+- [X] T005 [P] Create .gitignore to exclude data/, __pycache__, *.pyc, .pytest_cache, .duckdb
+- [X] T006 [P] Configure ruff linting rules in pyproject.toml
+- [X] T007 [P] Configure black formatting in pyproject.toml
+- [X] T008 [P] Create README.md with project overview and quickstart reference
+- [X] T009 [P] Create benchmark-results/README.md documenting benchmark tracking approach
 
 **Checkpoint**: Project structure created, dependencies configured, ready for implementation
 
@@ -49,64 +49,64 @@
 
 ### Data Model Foundation
 
-- [ ] T010 [P] Create src/models/__init__.py
-- [ ] T011 [P] Define dim_time schema in src/models/dimensions.py (time_key, date, year, quarter, month, day, is_weekend, is_holiday)
-- [ ] T012 [P] Define dim_geography schema in src/models/dimensions.py (geo_key, region, country, state, city, lat, lon)
-- [ ] T013 [P] Define dim_product schema in src/models/dimensions.py with SCD Type 2 (product_key, product_id, name, category, subcategory, brand, effective_date, expiration_date, is_current)
-- [ ] T014 [P] Define dim_customer schema in src/models/dimensions.py (customer_key, customer_id, segment, channel, ltv_tier)
-- [ ] T015 [P] Define dim_payment schema in src/models/dimensions.py (payment_key, payment_type, provider, fee_percent)
-- [ ] T016 Define sales_fact schema in src/models/facts.py (transaction_id, line_item_id, date, time_key, geo_key, product_key, customer_key, payment_key, quantity, unit_price, revenue, cost, discount_amount, profit)
+- [X] T010 [P] Create src/models/__init__.py
+- [X] T011 [P] Define dim_time schema in src/models/dimensions.py (time_key, date, year, quarter, month, day, is_weekend, is_holiday)
+- [X] T012 [P] Define dim_geography schema in src/models/dimensions.py (geo_key, region, country, state, city, lat, lon)
+- [X] T013 [P] Define dim_product schema in src/models/dimensions.py with SCD Type 2 (product_key, product_id, name, category, subcategory, brand, effective_date, expiration_date, is_current)
+- [X] T014 [P] Define dim_customer schema in src/models/dimensions.py (customer_key, customer_id, segment, channel, ltv_tier)
+- [X] T015 [P] Define dim_payment schema in src/models/dimensions.py (payment_key, payment_type, provider, fee_percent)
+- [X] T016 Define sales_fact schema in src/models/facts.py (transaction_id, line_item_id, date, time_key, geo_key, product_key, customer_key, payment_key, quantity, unit_price, revenue, cost, discount_amount, profit)
 
 ### Data Generation Infrastructure
 
-- [ ] T017 [P] Create src/datagen/__init__.py
-- [ ] T018 [P] Implement schema validation utilities in src/datagen/schemas.py (validate_constraints, check_referential_integrity)
-- [ ] T019 Implement deterministic data generator base class in src/datagen/generator.py (set_seed, generate_range)
-- [ ] T020 [P] Implement dim_time generator in src/datagen/generator.py (generate 3 years: 2021-2023, ~1095 rows)
-- [ ] T021 [P] Implement dim_geography generator in src/datagen/generator.py (hierarchical: regions → countries → cities, ~5000 rows)
-- [ ] T022 [P] Implement dim_product generator in src/datagen/generator.py with SCD Type 2 support (~10K-15K rows with history)
-- [ ] T023 [P] Implement dim_customer generator in src/datagen/generator.py with realistic segments (~1M rows)
-- [ ] T024 [P] Implement dim_payment generator in src/datagen/generator.py (~20 rows)
-- [ ] T025 Implement sales_fact generator in src/datagen/generator.py with foreign key linkage, Pareto distribution for products, configurable row count
+- [X] T017 [P] Create src/datagen/__init__.py
+- [X] T018 [P] Implement schema validation utilities in src/datagen/schemas.py (validate_constraints, check_referential_integrity)
+- [X] T019 Implement deterministic data generator base class in src/datagen/generator.py (set_seed, generate_range)
+- [X] T020 [P] Implement dim_time generator in src/datagen/generator.py (generate 3 years: 2021-2023, ~1095 rows)
+- [X] T021 [P] Implement dim_geography generator in src/datagen/generator.py (hierarchical: regions → countries → cities, ~5000 rows)
+- [X] T022 [P] Implement dim_product generator in src/datagen/generator.py with SCD Type 2 support (~10K-15K rows with history)
+- [X] T023 [P] Implement dim_customer generator in src/datagen/generator.py with realistic segments (~1M rows)
+- [X] T024 [P] Implement dim_payment generator in src/datagen/generator.py (~20 rows)
+- [X] T025 Implement sales_fact generator in src/datagen/generator.py with foreign key linkage, Pareto distribution for products, configurable row count
 
 ### Storage Infrastructure
 
-- [ ] T026 [P] Create src/storage/__init__.py
-- [ ] T027 [P] Implement Parquet writer in src/storage/parquet_handler.py (write_table, compression=snappy, row_group_size)
-- [ ] T028 [P] Implement Parquet reader in src/storage/parquet_handler.py (read_table, columns parameter for selective reads)
-- [ ] T029 [P] Implement CSV writer in src/storage/csv_handler.py (for comparison baseline)
-- [ ] T030 [P] Implement CSV reader in src/storage/csv_handler.py
-- [ ] T031 Implement Hive-style partitioning in src/storage/partitioning.py (partition_by_keys, write_partitioned, supported keys: year, quarter, month)
-- [ ] T032 Implement partition metadata tracking in src/storage/partitioning.py (list_partitions, get_partition_stats)
+- [X] T026 [P] Create src/storage/__init__.py
+- [X] T027 [P] Implement Parquet writer in src/storage/parquet_handler.py (write_table, compression=snappy, row_group_size)
+- [X] T028 [P] Implement Parquet reader in src/storage/parquet_handler.py (read_table, columns parameter for selective reads)
+- [X] T029 [P] Implement CSV writer in src/storage/csv_handler.py (for comparison baseline)
+- [X] T030 [P] Implement CSV reader in src/storage/csv_handler.py
+- [X] T031 Implement Hive-style partitioning in src/storage/partitioning.py (partition_by_keys, write_partitioned, supported keys: year, quarter, month)
+- [X] T032 Implement partition metadata tracking in src/storage/partitioning.py (list_partitions, get_partition_stats)
 
 ### Data Loading Infrastructure
 
-- [ ] T033 Create src/datagen/loaders.py
-- [ ] T034 Implement DuckDB table loader in src/datagen/loaders.py (load_parquet_to_duckdb, create_tables)
-- [ ] T035 Implement bulk loading with progress tracking in src/datagen/loaders.py (parallel_load, batch_size=1000000)
+- [X] T033 Create src/datagen/loaders.py
+- [X] T034 Implement DuckDB table loader in src/datagen/loaders.py (load_parquet_to_duckdb, create_tables)
+- [X] T035 Implement bulk loading with progress tracking in src/datagen/loaders.py (parallel_load, batch_size=1000000)
 
 ### Query Engine Infrastructure
 
-- [ ] T036 [P] Create src/query/__init__.py
-- [ ] T037 Implement DuckDB connection manager in src/query/engine.py (get_connection, set_threads, set_memory_limit)
-- [ ] T038 Implement query executor in src/query/engine.py (execute_query, execute_explain_analyze)
-- [ ] T039 [P] Implement query profiler in src/query/profiler.py (extract_metrics: execution_time, rows_scanned, bytes_scanned, partitions_accessed)
-- [ ] T040 [P] Implement structured logging for queries in src/query/profiler.py (log_query_execution: query_id, timestamp, duration, result_rows)
+- [X] T036 [P] Create src/query/__init__.py
+- [X] T037 Implement DuckDB connection manager in src/query/engine.py (get_connection, set_threads, set_memory_limit)
+- [X] T038 Implement query executor in src/query/engine.py (execute_query, execute_explain_analyze)
+- [X] T039 [P] Implement query profiler in src/query/profiler.py (extract_metrics: execution_time, rows_scanned, bytes_scanned, partitions_accessed)
+- [X] T040 [P] Implement structured logging for queries in src/query/profiler.py (log_query_execution: query_id, timestamp, duration, result_rows)
 
 ### CLI Infrastructure
 
-- [ ] T041 [P] Create src/cli/__init__.py
-- [ ] T042 Implement generate command skeleton in src/cli/generate.py (Click-based CLI with options: --rows, --seed, --format, --partition-by, --output-dir)
-- [ ] T043 [P] Implement benchmark command skeleton in src/cli/benchmark.py (options: --rounds, --baseline, --fail-on-regression, --output)
-- [ ] T044 [P] Implement analyze command skeleton in src/cli/analyze.py (options: --execute, --profile, --format)
+- [X] T041 [P] Create src/cli/__init__.py
+- [X] T042 Implement generate command skeleton in src/cli/generate.py (Click-based CLI with options: --rows, --seed, --format, --partition-by, --output-dir)
+- [X] T043 [P] Implement benchmark command skeleton in src/cli/benchmark.py (options: --rounds, --baseline, --fail-on-regression, --output)
+- [X] T044 [P] Implement analyze command skeleton in src/cli/analyze.py (options: --execute, --profile, --format)
 
 ### Testing Infrastructure
 
-- [ ] T045 [P] Create tests/benchmarks/__init__.py
-- [ ] T046 [P] Create tests/integration/__init__.py
-- [ ] T047 [P] Create tests/unit/__init__.py
-- [ ] T048 Create pytest fixtures in tests/conftest.py (duckdb_conn, sample_data_10k, benchmark_config)
-- [ ] T049 [P] Implement benchmark helper utilities in tests/conftest.py (assert_sla, compare_to_baseline)
+- [X] T045 [P] Create tests/benchmarks/__init__.py
+- [X] T046 [P] Create tests/integration/__init__.py
+- [X] T047 [P] Create tests/unit/__init__.py
+- [X] T048 Create pytest fixtures in tests/conftest.py (duckdb_conn, sample_data_10k, benchmark_config)
+- [X] T049 [P] Implement benchmark helper utilities in tests/conftest.py (assert_sla, compare_to_baseline)
 
 **Checkpoint**: Foundation ready - dimension generators, storage handlers, query engine, CLI skeletons complete. User story implementation can now begin in parallel.
 
@@ -179,19 +179,19 @@
 
 ### Benchmarks for User Story 3 (REQUIRED - Benchmark-Driven Development) ⚠️
 
-- [ ] T071 [P] [US3] Write benchmark comparing Parquet vs CSV query performance in tests/benchmarks/test_storage.py (expect 10-50x speedup for Parquet)
-- [ ] T072 [P] [US3] Write benchmark for columnar I/O efficiency in tests/benchmarks/test_storage.py (selective column reads: Parquet <20% data scanned vs CSV 100%)
-- [ ] T073 [P] [US3] Write integration test for compression ratio validation in tests/integration/test_data_generation.py (Parquet >=5:1 vs CSV)
+- [X] T071 [P] [US3] Write benchmark comparing Parquet vs CSV query performance in tests/benchmarks/test_storage.py (expect 10-50x speedup for Parquet)
+- [X] T072 [P] [US3] Write benchmark for columnar I/O efficiency in tests/benchmarks/test_storage.py (selective column reads: Parquet <20% data scanned vs CSV 100%)
+- [X] T073 [P] [US3] Write integration test for compression ratio validation in tests/integration/test_data_generation.py (Parquet >=5:1 vs CSV)
 
 **Verify benchmarks FAIL before proceeding to implementation**
 
 ### Implementation for User Story 3
 
-- [ ] T074 [US3] Extend generate CLI to support dual format generation in src/cli/generate.py (--format both creates Parquet + CSV)
-- [ ] T075 [P] [US3] Implement storage comparison query pattern in src/query/patterns.py (same_query_both_formats function)
-- [ ] T076 [US3] Implement storage metrics collection in src/query/profiler.py (measure file sizes, compression ratios, bytes scanned)
-- [ ] T077 [US3] Add storage comparison reporting to benchmark CLI in src/cli/benchmark.py (show Parquet vs CSV side-by-side results)
-- [ ] T078 [US3] Create storage comparison documentation in docs/architecture.md (explain columnar benefits with metrics)
+- [X] T074 [US3] Extend generate CLI to support dual format generation in src/cli/generate.py (--format both creates Parquet + CSV)
+- [X] T075 [P] [US3] Implement storage comparison query pattern in src/query/patterns.py (same_query_both_formats function)
+- [X] T076 [US3] Implement storage metrics collection in src/query/profiler.py (measure file sizes, compression ratios, bytes scanned)
+- [X] T077 [US3] Add storage comparison reporting to benchmark CLI in src/cli/benchmark.py (show Parquet vs CSV side-by-side results)
+- [X] T078 [US3] Create storage comparison documentation in docs/architecture.md (explain columnar benefits with metrics)
 
 **Checkpoint**: All user stories 1, 2, AND 3 should now be independently functional. Storage comparison demonstrates columnar advantages. Benchmarks should PASS.
 
@@ -205,20 +205,20 @@
 
 ### Benchmarks for User Story 4 (REQUIRED - Benchmark-Driven Development) ⚠️
 
-- [ ] T079 [P] [US4] Write benchmark for sub-linear scaling in tests/benchmarks/test_scalability.py (query on 50M vs 100M rows, validate <2.5x latency growth)
-- [ ] T080 [P] [US4] Write benchmark for concurrent query execution in tests/benchmarks/test_scalability.py (1 vs 10 concurrent queries using pytest-xdist, validate <2x latency)
-- [ ] T081 [P] [US4] Write benchmark for partition growth scalability in tests/benchmarks/test_scalability.py (2x partitions with filter, validate constant query time)
-- [ ] T082 [P] [US4] Write integration test for compression consistency at scale in tests/integration/test_data_generation.py (validate compression ratio holds at 200M rows)
+- [X] T079 [P] [US4] Write benchmark for sub-linear scaling in tests/benchmarks/test_scalability.py (query on 50M vs 100M rows, validate <2.5x latency growth)
+- [X] T080 [P] [US4] Write benchmark for concurrent query execution in tests/benchmarks/test_scalability.py (1 vs 10 concurrent queries using pytest-xdist, validate <2x latency)
+- [X] T081 [P] [US4] Write benchmark for partition growth scalability in tests/benchmarks/test_scalability.py (2x partitions with filter, validate constant query time)
+- [X] T082 [P] [US4] Write integration test for compression consistency at scale in tests/integration/test_data_generation.py (validate compression ratio holds at 200M rows)
 
 **Verify benchmarks FAIL before proceeding to implementation**
 
 ### Implementation for User Story 4
 
-- [ ] T083 [US4] Extend generate CLI to support multiple dataset sizes in src/cli/generate.py (--rows accepts 10000000, 50000000, 100000000, 200000000)
-- [ ] T084 [P] [US4] Implement scaling test utilities in src/query/patterns.py (run_query_at_scale function with dataset size parameter)
-- [ ] T085 [US4] Implement concurrent query executor in src/query/engine.py (execute_concurrent using threading.Thread pool)
-- [ ] T086 [US4] Add scaling results visualization to benchmark CLI in src/cli/benchmark.py (generate scaling chart data)
-- [ ] T087 [US4] Document scalability characteristics in docs/architecture.md (show scaling curves, concurrency results)
+- [X] T083 [US4] Extend generate CLI to support multiple dataset sizes in src/cli/generate.py (--rows accepts 10000000, 50000000, 100000000, 200000000)
+- [X] T084 [P] [US4] Implement scaling test utilities in src/query/patterns.py (run_query_at_scale function with dataset size parameter)
+- [X] T085 [US4] Implement concurrent query executor in src/query/engine.py (execute_concurrent using threading.Thread pool)
+- [X] T086 [US4] Add scaling results visualization to benchmark CLI in src/cli/benchmark.py (generate scaling chart data)
+- [X] T087 [US4] Document scalability characteristics in docs/architecture.md (show scaling curves, concurrency results)
 
 **Checkpoint**: All user stories 1-4 should now be independently functional. Scalability proven. All benchmarks should PASS.
 
@@ -230,10 +230,10 @@
 
 ### Documentation
 
-- [ ] T088 [P] Create docs/architecture.md documenting DuckDB + Parquet architecture decisions
-- [ ] T089 [P] Complete docs/query-catalog.md with all 6 query patterns and execution plans
-- [ ] T090 [P] Update README.md with comprehensive usage examples and quickstart link
-- [ ] T091 [P] Create benchmark-results/baseline/ with initial benchmark run results (baseline for future comparisons)
+- [X] T088 [P] Create docs/architecture.md documenting DuckDB + Parquet architecture decisions
+- [X] T089 [P] Complete docs/query-catalog.md with all 6 query patterns and execution plans
+- [X] T090 [P] Update README.md with comprehensive usage examples and quickstart link
+- [X] T091 [P] Create benchmark-results/baseline/ with initial benchmark run results (baseline for future comparisons)
 
 ### Code Quality
 
