@@ -1,0 +1,118 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "olap-demo"
+version = "1.0.0"
+description = "OLAP Core Capabilities Tech Demo - Demonstrating columnar storage, partition pruning, and analytical query performance"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    {name = "OLAP Demo Team"},
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "duckdb>=0.9.0",
+    "pyarrow>=14.0.0",
+    "pandas>=2.1.0",
+    "faker>=22.0.0",
+    "click>=8.1.0",
+    "tabulate>=0.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-benchmark>=4.0.0",
+    "pytest-xdist>=3.5.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.7.0",
+]
+
+[project.scripts]
+olap-generate = "src.cli.generate:main"
+olap-benchmark = "src.cli.benchmark:main"
+olap-analyze = "src.cli.analyze:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.git
+  | \.venv
+  | venv
+  | build
+  | dist
+  | data
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [
+    ".git",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    "data",
+    "__pycache__",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]  # imported but unused
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "7.4"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--showlocals",
+]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+    "benchmark: mark test as a performance benchmark",
+    "integration: mark test as integration test",
+    "unit: mark test as unit test",
+]
