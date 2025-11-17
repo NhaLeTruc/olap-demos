@@ -237,25 +237,25 @@
 
 ### Code Quality
 
-- [ ] T092 [P] Add comprehensive docstrings to all src/ modules following Google style
-- [ ] T093 [P] Run ruff linting and fix all issues across codebase
-- [ ] T094 [P] Run black formatting across entire codebase
-- [ ] T095 [P] Add type hints to all public functions in src/ (mypy-compatible)
+- [X] T092 [P] Add comprehensive docstrings to all src/ modules following Google style
+- [X] T093 [P] Run ruff linting and fix all issues across codebase
+- [X] T094 [P] Run black formatting across entire codebase
+- [X] T095 [P] Add type hints to all public functions in src/ (mypy-compatible)
 
 ### Testing Completeness
 
-- [ ] T096 [P] Create unit tests for data generators in tests/unit/test_models.py (validate schemas, constraints)
-- [ ] T097 [P] Create unit tests for storage handlers in tests/unit/test_storage.py (Parquet read/write, partitioning)
-- [ ] T098 [P] Create unit tests for query profiler in tests/unit/test_profiler.py (metric extraction from EXPLAIN output)
-- [ ] T099 Create integration test for end-to-end data generation pipeline in tests/integration/test_data_generation.py (generate → load → query → verify)
-- [ ] T100 Create integration test for partition pruning in tests/integration/test_partitioning.py (verify partition skip in DuckDB)
+- [X] T096 [P] Create unit tests for data generators in tests/unit/test_models.py (validate schemas, constraints)
+- [X] T097 [P] Create unit tests for storage handlers in tests/unit/test_storage.py (Parquet read/write, partitioning)
+- [X] T098 [P] Create unit tests for query profiler in tests/unit/test_profiler.py (metric extraction from EXPLAIN output)
+- [X] T099 Create integration test for end-to-end data generation pipeline in tests/integration/test_data_generation.py (generate → load → query → verify)
+- [X] T100 Create integration test for partition pruning in tests/integration/test_partitioning.py (verify partition skip in DuckDB)
 
 ### Validation & Verification
 
-- [ ] T101 Run full quickstart.md walkthrough and verify all commands work
-- [ ] T102 Generate 100M row dataset and validate all benchmarks pass SLAs
-- [ ] T103 Run constitution compliance check: verify all 7 principles satisfied with evidence
-- [ ] T104 Create CHANGELOG.md documenting initial release (v1.0.0)
+- [X] T101 Run full quickstart.md walkthrough and verify all commands work
+- [X] T102 Generate 100M row dataset and validate all benchmarks pass SLAs
+- [X] T103 Run constitution compliance check: verify all 7 principles satisfied with evidence
+- [X] T104 Create CHANGELOG.md documenting initial release (v1.0.0)
 
 ---
 
