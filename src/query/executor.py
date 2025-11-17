@@ -260,6 +260,57 @@ class QueryExecutor:
         }
 
 
+    def execute_concurrent(
+        self,
+        queries: List[str],
+        max_workers: Optional[int] = None,
+        track_history: bool = False
+    ) -> List[QueryResult]:
+        """Execute multiple queries concurrently.
+
+        Args:
+            queries: List of SQL query strings to execute
+            max_workers: Maximum number of concurrent workers (default: num queries or 10)
+            track_history: Whether to store results in query history
+
+        Returns:
+            List of QueryResult objects in order of completion
+        """
+        import concurrent.futures
+
+        if max_workers is None:
+            max_workers = min(len(queries), 10)
+
+        results = []
+
+        def execute_one(sql):
+            """Execute a single query."""
+            return self.execute(sql, track_history=track_history)
+
+        # Execute queries concurrently
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = [executor.submit(execute_one, query) for query in queries]
+
+            # Collect results as they complete
+            for future in concurrent.futures.as_completed(futures):
+                try:
+                    result = future.result()
+                    results.append(result)
+                except Exception as e:
+                    # Continue with other queries even if one fails
+                    error_result = QueryResult(
+                        data=pd.DataFrame(),
+                        execution_time_ms=0,
+                        row_count=0,
+                        query_sql="",
+                        timestamp=datetime.now()
+                    )
+                    error_result.error = str(e)
+                    results.append(error_result)
+
+        return results
+
+
 class QueryExecutionError(Exception):
     """Exception raised when query execution fails."""
     pass

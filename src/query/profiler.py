@@ -305,6 +305,66 @@ class QueryProfiler:
             'pruning_effective': speedup > 1.5,  # At least 50% improvement
         }
 
+    def collect_storage_metrics(
+        self,
+        parquet_path: Path,
+        csv_path: Optional[Path] = None,
+        table_name: str = 'fact_sales'
+    ) -> Dict[str, Any]:
+        """Collect storage metrics for Parquet and CSV formats.
+
+        Args:
+            parquet_path: Path to Parquet data directory
+            csv_path: Optional path to CSV data directory
+            table_name: Name of the table to analyze
+
+        Returns:
+            Dictionary with storage metrics including file sizes and compression ratios
+        """
+        from src.storage.parquet_handler import ParquetHandler
+        from src.storage.csv_handler import CSVHandler
+
+        metrics = {}
+
+        # Get Parquet metrics
+        try:
+            parquet_handler = ParquetHandler(parquet_path)
+            parquet_meta = parquet_handler.get_metadata(table_name)
+            metrics['parquet'] = {
+                'file_size_bytes': parquet_meta['file_size_bytes'],
+                'num_rows': parquet_meta['num_rows'],
+                'num_columns': parquet_meta['num_columns'],
+                'compression': parquet_meta['compression'],
+            }
+        except Exception as e:
+            metrics['parquet'] = {'error': str(e)}
+
+        # Get CSV metrics if path provided
+        if csv_path:
+            try:
+                csv_handler = CSVHandler(csv_path)
+                csv_meta = csv_handler.get_metadata(table_name)
+                metrics['csv'] = {
+                    'file_size_bytes': csv_meta['file_size_bytes'],
+                    'num_rows': csv_meta['num_rows'],
+                    'num_columns': csv_meta['num_columns'],
+                }
+
+                # Calculate compression ratio
+                if 'parquet' in metrics and 'file_size_bytes' in metrics['parquet']:
+                    parquet_size = metrics['parquet']['file_size_bytes']
+                    csv_size = metrics['csv']['file_size_bytes']
+                    if parquet_size > 0:
+                        compression_ratio = csv_size / parquet_size
+                        metrics['compression_ratio'] = compression_ratio
+                        metrics['space_saved_bytes'] = csv_size - parquet_size
+                        metrics['space_saved_pct'] = ((csv_size - parquet_size) / csv_size) * 100
+
+            except Exception as e:
+                metrics['csv'] = {'error': str(e)}
+
+        return metrics
+
     def export_profiles(self, output_path: Path) -> None:
         """Export all profiles to JSON file.
 

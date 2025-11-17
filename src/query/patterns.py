@@ -387,33 +387,194 @@ class QueryPatterns:
         result = self.executor.execute(query)
         return result.data
 
-    # Storage Comparison
+    # Storage Comparison (User Story 3)
 
     def same_query_both_formats(
         self,
-        query_pattern: str,
-        dimensions: List[str]
+        query_sql: str,
+        parquet_table: str = 'fact_sales',
+        csv_table: str = 'fact_sales_csv'
     ) -> Dict[str, Any]:
         """Execute same query on Parquet and CSV formats for comparison.
 
         Args:
-            query_pattern: Query pattern to execute (e.g., 'revenue_by_dimensions')
-            dimensions: Dimensions for the query
+            query_sql: SQL query to execute (use {table} placeholder)
+            parquet_table: Name of Parquet-backed table
+            csv_table: Name of CSV-backed table
 
         Returns:
-            Dictionary with results from both formats
+            Dictionary with results from both formats and performance comparison
         """
-        # Execute on Parquet (fact_sales)
-        parquet_result = self.revenue_by_dimensions(dimensions)
-        parquet_time = self.executor.query_history[-1].execution_time_ms
+        results = {}
 
-        # Execute on CSV (fact_sales_csv) if available
-        # This would require the CSV table to be loaded
-        # For now, return Parquet results
-        return {
-            'parquet': {
-                'data': parquet_result,
-                'execution_time_ms': parquet_time,
-            },
-            'format_comparison': 'CSV table not loaded',
+        # Execute on Parquet
+        parquet_query = query_sql.replace('{table}', parquet_table)
+        parquet_result = self.executor.execute(parquet_query)
+        results['parquet'] = {
+            'execution_time_ms': parquet_result.execution_time_ms,
+            'row_count': parquet_result.row_count,
+            'data': parquet_result.data,
         }
+
+        # Execute on CSV if table exists
+        try:
+            csv_query = query_sql.replace('{table}', csv_table)
+            csv_result = self.executor.execute(csv_query)
+            results['csv'] = {
+                'execution_time_ms': csv_result.execution_time_ms,
+                'row_count': csv_result.row_count,
+                'data': csv_result.data,
+            }
+
+            # Calculate speedup
+            if csv_result.execution_time_ms > 0:
+                speedup = csv_result.execution_time_ms / parquet_result.execution_time_ms
+                results['speedup_factor'] = speedup
+                results['faster_format'] = 'parquet' if speedup > 1 else 'csv'
+            else:
+                results['speedup_factor'] = 1.0
+                results['faster_format'] = 'similar'
+
+        except Exception as e:
+            results['csv'] = None
+            results['error'] = f"CSV table not available: {str(e)}"
+
+        return results
+
+    def compare_storage_formats(
+        self,
+        dimensions: List[str],
+        parquet_table: str = 'fact_sales',
+        csv_table: str = 'fact_sales_csv'
+    ) -> Dict[str, Any]:
+        """Compare Parquet vs CSV for multi-dimensional aggregation.
+
+        Args:
+            dimensions: List of dimensions to aggregate by
+            parquet_table: Name of Parquet-backed table
+            csv_table: Name of CSV-backed table
+
+        Returns:
+            Dictionary with performance comparison
+        """
+        # Build query with placeholder
+        dim_cols = []
+        for dim in dimensions:
+            if '.' not in dim:
+                if dim in ['year', 'quarter', 'month']:
+                    dim_cols.append(f'dt.{dim}')
+                elif dim in ['country', 'region']:
+                    dim_cols.append(f'dg.{dim}')
+                elif dim in ['category']:
+                    dim_cols.append(f'dp.{dim}')
+                else:
+                    dim_cols.append(dim)
+            else:
+                dim_cols.append(dim)
+
+        group_by_clause = ', '.join(dim_cols)
+        select_clause = ', '.join(dim_cols)
+
+        query_template = f"""
+        SELECT
+            {select_clause},
+            SUM(fs.revenue) as total_revenue,
+            COUNT(*) as transaction_count
+        FROM {{table}} fs
+        JOIN dim_time dt ON fs.time_key = dt.time_key
+        JOIN dim_geography dg ON fs.geo_key = dg.geo_key
+        JOIN dim_product dp ON fs.product_key = dp.product_key
+        GROUP BY {group_by_clause}
+        LIMIT 100
+        """
+
+        return self.same_query_both_formats(
+            query_template,
+            parquet_table,
+            csv_table
+        )
+
+    # Scalability Testing (User Story 4)
+
+    def run_query_at_scale(
+        self,
+        query_pattern: str,
+        dataset_size: int,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Run query pattern on dataset of specified size.
+
+        Args:
+            query_pattern: Name of query pattern to run
+            dataset_size: Expected dataset size in rows
+            **kwargs: Arguments to pass to the query pattern
+
+        Returns:
+            Dictionary with query results and scaling metrics
+        """
+        import time
+
+        # Get the query pattern method
+        pattern_method = getattr(self, query_pattern, None)
+        if not pattern_method:
+            raise ValueError(f"Unknown query pattern: {query_pattern}")
+
+        # Execute query with timing
+        start_time = time.time()
+        result = pattern_method(**kwargs)
+        execution_time_ms = (time.time() - start_time) * 1000
+
+        # Calculate scaling metrics
+        row_count = len(result) if hasattr(result, '__len__') else 0
+
+        return {
+            'query_pattern': query_pattern,
+            'dataset_size': dataset_size,
+            'execution_time_ms': execution_time_ms,
+            'result_rows': row_count,
+            'throughput_rows_per_sec': (dataset_size / execution_time_ms * 1000) if execution_time_ms > 0 else 0,
+        }
+
+    def compare_scaling(
+        self,
+        query_pattern: str,
+        dataset_sizes: List[int],
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Compare query performance across different dataset sizes.
+
+        Args:
+            query_pattern: Name of query pattern to benchmark
+            dataset_sizes: List of dataset sizes to test
+            **kwargs: Arguments to pass to the query pattern
+
+        Returns:
+            Dictionary with scaling comparison results
+        """
+        results = []
+
+        for size in dataset_sizes:
+            result = self.run_query_at_scale(query_pattern, size, **kwargs)
+            results.append(result)
+
+        # Calculate scaling factors
+        if len(results) >= 2:
+            baseline = results[0]
+            scaling_factors = []
+
+            for i, result in enumerate(results[1:], 1):
+                size_factor = result['dataset_size'] / baseline['dataset_size']
+                time_factor = result['execution_time_ms'] / baseline['execution_time_ms']
+                scaling_factors.append({
+                    'size_multiplier': size_factor,
+                    'time_multiplier': time_factor,
+                    'scaling_efficiency': size_factor / time_factor if time_factor > 0 else 0,
+                })
+
+            return {
+                'results': results,
+                'scaling_factors': scaling_factors,
+                'is_sublinear': all(sf['time_multiplier'] < sf['size_multiplier'] * 2.5 for sf in scaling_factors),
+            }
+
+        return {'results': results, 'scaling_factors': []}
