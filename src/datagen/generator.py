@@ -165,8 +165,8 @@ def generate_dim_geography(
 
                 # Generate realistic lat/long based on country
                 if country['code'] == 'US':
-                    latitude = generator.faker.latitude()
-                    longitude = generator.faker.longitude()
+                    latitude = float(generator.faker.latitude())
+                    longitude = float(generator.faker.longitude())
                 elif country['code'] == 'GB':
                     latitude = random.uniform(50.0, 58.0)
                     longitude = random.uniform(-5.0, 2.0)
@@ -180,8 +180,8 @@ def generate_dim_geography(
                     'region': region,
                     'country': country['name'],
                     'country_code': country['code'],
-                    'latitude': round(latitude, 6),
-                    'longitude': round(longitude, 6),
+                    'latitude': float(round(latitude, 6)),
+                    'longitude': float(round(longitude, 6)),
                     'population_segment': random.choice(population_segments),
                     'timezone': country['timezone'],
                 }

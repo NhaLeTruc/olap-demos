@@ -64,6 +64,11 @@ from src.storage.partition_manager import PartitionManager
     default=20,
     help='Maximum rows to display'
 )
+@click.option(
+    '--profile',
+    type=str,
+    help='Show execution plan and profile for query'
+)
 def main(
     data_path: Path,
     db_path: Path,
@@ -73,7 +78,8 @@ def main(
     describe: str,
     sample: str,
     partitions: str,
-    max_rows: int
+    max_rows: int,
+    profile: str
 ):
     """Analyze OLAP dataset with ad-hoc queries.
 
@@ -172,6 +178,42 @@ def main(
                 partition_str = ', '.join([f"{k}={v}" for k, v in partition.items()])
                 click.echo(f"  - {partition_str}")
 
+        click.echo("")
+        return
+
+    # Profile query execution
+    if profile:
+        click.echo("Query Profiling:")
+        click.echo("-" * 80)
+        click.echo(profile)
+        click.echo("")
+
+        # Get execution plan
+        explain_query = f"EXPLAIN ANALYZE {profile}"
+        plan_result = executor.execute(explain_query)
+
+        click.echo("Execution Plan:")
+        click.echo("-" * 80)
+        for line in plan_result.data.iloc[:, 0]:
+            # Highlight window functions
+            if 'WINDOW' in line:
+                click.echo(click.style(line, fg='yellow', bold=True))
+            # Highlight partition filters
+            elif 'Filters:' in line or 'partition' in line.lower():
+                click.echo(click.style(line, fg='green', bold=True))
+            else:
+                click.echo(line)
+        click.echo("")
+
+        # Execute query
+        result = executor.execute(profile)
+
+        click.echo("Results:")
+        click.echo("-" * 80)
+        click.echo(ResultFormatter.format_dataframe(result.data, max_rows=max_rows))
+        click.echo("")
+        click.echo(f"Rows: {result.row_count}")
+        click.echo(f"Execution Time: {ResultFormatter.format_execution_time(result.execution_time_ms)}")
         click.echo("")
         return
 

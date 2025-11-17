@@ -9,6 +9,7 @@ from .connection import ConnectionManager
 from .executor import QueryExecutor
 from .profiler import QueryProfiler
 from .formatter import ResultFormatter
+from .patterns import QueryPatterns
 
 __all__ = [
     "DuckDBLoader",
@@ -16,4 +17,5 @@ __all__ = [
     "QueryExecutor",
     "QueryProfiler",
     "ResultFormatter",
+    "QueryPatterns",
 ]

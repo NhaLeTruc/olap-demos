@@ -122,23 +122,23 @@
 
 > **Constitution Principle III**: Benchmarks MUST be written FIRST, FAIL initially, then implementation makes them pass
 
-- [ ] T050 [P] [US1] Write benchmark for revenue by region and year in tests/benchmarks/test_aggregations.py (SLA: p95 <2s on 100M rows)
-- [ ] T051 [P] [US1] Write benchmark for category performance by quarter in tests/benchmarks/test_aggregations.py (SLA: p95 <1s with year filter)
-- [ ] T052 [P] [US1] Write benchmark for drill-down year→quarter→month in tests/benchmarks/test_aggregations.py (SLA: p95 <1s for filtered queries)
-- [ ] T053 [P] [US1] Write benchmark for partition pruning validation in tests/benchmarks/test_aggregations.py (verify 80%+ partition skip with year filter)
-- [ ] T054 [P] [US1] Write integration test for deterministic results in tests/integration/test_query_execution.py (same query, identical results across runs)
+- [X] T050 [P] [US1] Write benchmark for revenue by region and year in tests/benchmarks/test_aggregations.py (SLA: p95 <2s on 100M rows)
+- [X] T051 [P] [US1] Write benchmark for category performance by quarter in tests/benchmarks/test_aggregations.py (SLA: p95 <1s with year filter)
+- [X] T052 [P] [US1] Write benchmark for drill-down year→quarter→month in tests/benchmarks/test_aggregations.py (SLA: p95 <1s for filtered queries)
+- [X] T053 [P] [US1] Write benchmark for partition pruning validation in tests/benchmarks/test_aggregations.py (verify 80%+ partition skip with year filter)
+- [X] T054 [P] [US1] Write integration test for deterministic results in tests/integration/test_query_execution.py (same query, identical results across runs)
 
 **Verify benchmarks FAIL before proceeding to implementation**
 
 ### Implementation for User Story 1
 
-- [ ] T055 [P] [US1] Implement predefined query pattern for multi-dimensional aggregation in src/query/patterns.py (revenue_by_dimensions function)
-- [ ] T056 [P] [US1] Implement predefined query pattern for drill-down in src/query/patterns.py (drill_down_time_hierarchy function)
-- [ ] T057 [US1] Integrate partition pruning demonstration in src/query/patterns.py (partition_pruning_comparison function with/without filters)
-- [ ] T058 [US1] Wire up generate CLI command in src/cli/generate.py to create partitioned sales data (call generators, write Parquet with year/quarter partitions)
-- [ ] T059 [US1] Implement execute mode in analyze CLI command in src/cli/analyze.py (run query, show execution plan with partition stats)
-- [ ] T060 [US1] Add query execution metrics collection in src/query/profiler.py (capture from EXPLAIN ANALYZE output)
-- [ ] T061 [US1] Create example queries for US1 in docs/query-catalog.md (3 examples with expected execution plans)
+- [X] T055 [P] [US1] Implement predefined query pattern for multi-dimensional aggregation in src/query/patterns.py (revenue_by_dimensions function)
+- [X] T056 [P] [US1] Implement predefined query pattern for drill-down in src/query/patterns.py (drill_down_time_hierarchy function)
+- [X] T057 [US1] Integrate partition pruning demonstration in src/query/patterns.py (partition_pruning_comparison function with/without filters)
+- [X] T058 [US1] Wire up generate CLI command in src/cli/generate.py to create partitioned sales data (call generators, write Parquet with year/quarter partitions)
+- [X] T059 [US1] Implement execute mode in analyze CLI command in src/cli/analyze.py (run query, show execution plan with partition stats)
+- [X] T060 [US1] Add query execution metrics collection in src/query/profiler.py (capture from EXPLAIN ANALYZE output)
+- [X] T061 [US1] Create example queries for US1 in docs/query-catalog.md (3 examples with expected execution plans)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently. Can generate data, run multi-dimensional queries, observe partition pruning. Benchmarks should now PASS.
 
@@ -152,20 +152,20 @@
 
 ### Benchmarks for User Story 2 (REQUIRED - Benchmark-Driven Development) ⚠️
 
-- [ ] T062 [P] [US2] Write benchmark for 3-month moving average in tests/benchmarks/test_window_functions.py (SLA: p95 <3s on 100M rows)
-- [ ] T063 [P] [US2] Write benchmark for year-over-year growth calculation in tests/benchmarks/test_window_functions.py (SLA: p95 <3s)
-- [ ] T064 [P] [US2] Write benchmark for product rankings by quarter in tests/benchmarks/test_window_functions.py (SLA: p95 <2s with year filter)
-- [ ] T065 [P] [US2] Write integration test for window function correctness in tests/integration/test_query_execution.py (validate moving average math on known dataset)
+- [X] T062 [P] [US2] Write benchmark for 3-month moving average in tests/benchmarks/test_window_functions.py (SLA: p95 <3s on 100M rows)
+- [X] T063 [P] [US2] Write benchmark for year-over-year growth calculation in tests/benchmarks/test_window_functions.py (SLA: p95 <3s)
+- [X] T064 [P] [US2] Write benchmark for product rankings by quarter in tests/benchmarks/test_window_functions.py (SLA: p95 <2s with year filter)
+- [X] T065 [P] [US2] Write integration test for window function correctness in tests/integration/test_query_execution.py (validate moving average math on known dataset)
 
 **Verify benchmarks FAIL before proceeding to implementation**
 
 ### Implementation for User Story 2
 
-- [ ] T066 [P] [US2] Implement moving average window function pattern in src/query/patterns.py (moving_average_revenue function with configurable window size)
-- [ ] T067 [P] [US2] Implement year-over-year growth pattern in src/query/patterns.py (yoy_growth function using LAG window function)
-- [ ] T068 [P] [US2] Implement product ranking pattern in src/query/patterns.py (product_rankings function with ROW_NUMBER and RANK)
-- [ ] T069 [US2] Add window function examples to docs/query-catalog.md (3 examples with expected outputs)
-- [ ] T070 [US2] Extend analyze CLI to highlight window function execution in src/cli/analyze.py (detect WINDOW clauses, show window stats)
+- [X] T066 [P] [US2] Implement moving average window function pattern in src/query/patterns.py (moving_average_revenue function with configurable window size)
+- [X] T067 [P] [US2] Implement year-over-year growth pattern in src/query/patterns.py (yoy_growth function using LAG window function)
+- [X] T068 [P] [US2] Implement product ranking pattern in src/query/patterns.py (product_rankings function with ROW_NUMBER and RANK)
+- [X] T069 [US2] Add window function examples to docs/query-catalog.md (3 examples with expected outputs)
+- [X] T070 [US2] Extend analyze CLI to highlight window function execution in src/cli/analyze.py (detect WINDOW clauses, show window stats)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently. Window functions operational. Benchmarks should PASS.
 
